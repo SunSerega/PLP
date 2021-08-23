@@ -7,7 +7,7 @@ type
     {$region Utils}
     
     /// Greatest Common Divisor
-    public static function GCD(a, b: BigInteger): BigInteger;
+    private static function GCD(a, b: BigInteger): BigInteger;
     begin
       while true do
       begin

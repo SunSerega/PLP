@@ -1,9 +1,17 @@
 ﻿uses PLP;
 
 begin
-  var pts_count := ReadInteger('Введите кол-во точек:');
-  'Вводите по два числа на точку, в одном из двух форматов, "123.456" или "123/456":'.Println;
-  var pts := ArrGen(pts_count, i->(Fraction.Read($'Точка {i}:'), Fraction.Read));
+  Reset(input, 'input.txt');
+  Rewrite(output, 'output.txt');
+  
+  var pts_count := ReadLexem.ToInteger;
+  var pts := ArrGen(pts_count, i->(Fraction.Read, Fraction.Read) );
+  pts.PrintLines;
+  
   var pol := LagrangePolynomial(pts);
+  Println;
   pol.Select((k,i)->$'{k}*x^{i}').Reverse.Print(' + ');
+  
+  output.Close;
+  Exec('output.txt');
 end.
