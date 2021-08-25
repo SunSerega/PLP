@@ -70,7 +70,17 @@ type
     public static function operator implicit(n: integer): Fraction := new Fraction(n, 1);
     public static function operator implicit(n: int64): Fraction := new Fraction(n, 1);
     public static function operator implicit(n: BigInteger): Fraction := new Fraction(n, 1);
+    
     public function Round := (n + d div 2) div d;
+    public function Round(margin: Fraction): Fraction;
+    begin
+      var gcd := GCD(BigInteger.Abs(self.d), BigInteger.Abs(margin.d));
+      var d1 := self.d div gcd;
+      var d2 := margin.d div gcd;
+      Result.n := Fraction.Create(self.n*d2, margin.n*d1).Round;
+      Result.d := margin.d;
+      Result.Normalize;
+    end;
     
     public static function operator implicit(r: real): Fraction;
     const E_size = 11;
@@ -212,10 +222,8 @@ type
       Result := self;
     end;
     
-    public static function Read(prompt: string := nil): Fraction;
+    public static function Parse(l: string): Fraction;
     begin
-      if prompt<>nil then prompt.Print;
-      var l := ReadLexem;
       var p := l.Split('.', '/');
       if p.Length>2 then raise new System.FormatException($'Ожидалось выражение типа "num/num" или "num.num"');
       if p.Length=1 then
@@ -235,6 +243,16 @@ type
         );
         Result.Normalize;
       end;
+    end;
+    public static function Read(prompt: string := nil): Fraction;
+    begin
+      if prompt<>nil then prompt.Print;
+      Result := Parse(ReadLexem);
+    end;
+    public static function Readln(prompt: string := nil): Fraction;
+    begin
+      if prompt<>nil then prompt.Print;
+      Result := Parse(ReadlnString);
     end;
     
     {$endregion Type conversion}
